@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookBase Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="logo"><i class="fas fa-book-open"></i> BookBase</div>
+          <button class="close-btn" onclick="toggleSidebar()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <nav class="menu">
+          <a href="#" class="active"><i class="fas fa-home"></i> Discover</a>
+          <a href="#"><i class="fas fa-th-large"></i> Category</a>
+          <a href="#"><i class="fas fa-book"></i> My Library</a>
+          <a href="#"><i class="fas fa-heart"></i> Favourite</a>
+        </nav>
+        <nav class="menu bottom-menu">
+          <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header>
+          <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search books..."
+                onkeyup="filterBooks()"
+              />
+            </div>
+          </div>
+          <div class="user-profile-mini">
+            <div class="avatar">
+              <img
+                src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff"
+                alt="User"
+              />
+            </div>
+            <span class="user-name" id="userDisplay">Admin</span>
+          </div>
+        </header>
+
+        <section class="recommended">
+          <div class="section-header">
+            <h2>Recommended</h2>
+            <button class="see-all">
+              See All <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <div class="cards-grid" id="recommendedContainer"></div>
+        </section>
+
+        <section class="categories">
+          <div class="section-header">
+            <h2>Categories</h2>
+            <button class="filter-btn"><i class="fas fa-sliders-h"></i></button>
+          </div>
+
+          <div class="tags" id="categoryList"></div>
+
+          <div class="cards-grid" id="categoryBookContainer"></div>
+        </section>
+      </main>
+
+      <aside class="right-panel" id="rightPanel">
+        <div class="book-detail">
+          <div class="detail-cover">
+            <img id="detailImage" src="" alt="Cover" />
+          </div>
+
+          <div class="detail-info">
+            <h2 id="detailTitle">Select a Book</h2>
+            <p class="author" id="detailAuthor">-</p>
+
+            <div class="stars">★★★★☆ <span>4.8</span></div>
+
+            <div class="stats">
+              <div>
+                <strong>ID: <span id="detailId">-</span></strong
+                ><small>ID</small>
+              </div>
+              <div class="border-lr">
+                <strong>PDF</strong><small>Format</small>
+              </div>
+              <div><strong>Free</strong><small>Price</small></div>
+            </div>
+
+            <p class="description" id="detailDescription">
+              Click on any book card to view its details here.
+            </p>
+
+            <a href="#" id="readBtn" class="read-now-btn" target="_blank">
+              Read Now <i class="fas fa-book-open"></i>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
