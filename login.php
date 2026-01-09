@@ -21,16 +21,16 @@ if (isset($_POST['login'])) {
     if ($cek > 0) {
         $data = mysqli_fetch_assoc($query);
         
-        // Cek Role
+        $_SESSION['username'] = $data['username'];
+        $_SESSION['id_user']  = $data['id']; // Penting untuk fitur favorit
+        $_SESSION['status']   = "login";
+        $_SESSION['role']     = $data['role'];
+
         if($data['role'] == "admin"){
-            $_SESSION['username'] = $data['username'];
-            $_SESSION['role'] = "admin";
-            $_SESSION['status'] = "login";
-            
-            header("location:admin/index.php");
-            exit();
+            header("location:admin/index"); // Tanpa .php karena .htaccess
         } else {
-            $pesan_error = "Maaf, Anda bukan Admin!";
+            // Jika Member, lempar ke dashboard member
+            header("location:user/index");
         }
     } else {
         $pesan_error = "Email atau Password salah!";

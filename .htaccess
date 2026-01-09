@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# 1. Mencegah user melihat daftar file (directory listing)
+Options -Indexes
+
+# 2. Jika user mengetik /file, server akan mencari /file.php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# 3. Menangani error 404 (Opsional, buat file 404.php jika mau)
+# ErrorDocument 404 /404.php
