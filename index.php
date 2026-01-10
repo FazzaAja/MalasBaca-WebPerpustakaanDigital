@@ -1,87 +1,87 @@
 <?php
 session_start();
+// Jika sudah login, lempar ke user/index (UX yang baik)
+if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'member') {
+    header("Location: user/index.php");
+    exit;
+}
+
+$path = ""; 
 include 'config/database.php';
 
-// Jika sudah login, lempar ke dashboard masing-masing
-if (isset($_SESSION['status']) && $_SESSION['status'] == "login") {
-    if ($_SESSION['role'] == 'admin') header("location:admin/index");
-    if ($_SESSION['role'] == 'member') header("location:user/index");
-}
+// Tampilkan saja buku terbaru sebagai "Teaser"
+$query_books = mysqli_query($conn, "SELECT * FROM books ORDER BY id DESC LIMIT 8");
+$query_categories = mysqli_query($conn, "SELECT * FROM categories");
+
+include 'layout/header.php';
+include 'layout/sidebar.php';
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <title>Perpustakaan Digital</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        :root { --primary-color: #4e73df; }
-        body { background-color: #f8f9fc; }
-        .navbar { box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15); }
-        .book-card { transition: all 0.3s ease; border: none; border-radius: 10px; overflow: hidden; background: white; }
-        .book-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .cover-container { height: 250px; overflow: hidden; position: relative; }
-        .cover-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .book-card:hover .cover-img { transform: scale(1.05); }
-        .category-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; }
-    </style>
-</head>
-<body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-book-half"></i> PerpusDigital</a>
-            <a href="login" class="btn btn-primary px-4 rounded-pill">Login</a>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        <div class="row justify-content-center mb-5">
-            <div class="col-md-6">
-                <form action="login" method="GET"> <input type="hidden" name="pesan" value="belum_login">
-                    <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden">
-                        <input type="text" class="form-control border-0 bg-white" placeholder="Cari buku apa hari ini?">
-                        <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i></button>
-                    </div>
-                </form>
+<main class="main-content">
+    <header>
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            
+            <div class="search-bar" onclick="window.location.href='login.php'" style="cursor: pointer;">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Login untuk mencari buku..." style="cursor: pointer;" readonly />
             </div>
         </div>
+        <div class="user-profile-mini">
+            <a href="login.php" class="see-all">Login / Register</a>
+        </div>
+    </header>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-dark">📚 Pustaka Buku</h5>
-            <small class="text-muted">Login untuk akses penuh</small>
+    <section class="recommended">
+        <div class="section-header">
+            <h2>Rekomendasi Terkini</h2>
+            <p style="font-size:12px; color:#888;">Login untuk akses penuh</p>
         </div>
 
-        <div class="row g-4">
-            <?php
-            // Query Tampil Buku
-            $query = mysqli_query($conn, "SELECT books.*, categories.name as cat_name FROM books LEFT JOIN categories ON books.category_id = categories.id ORDER BY books.id DESC");
-            while ($buku = mysqli_fetch_assoc($query)) {
-            ?>
-            <div class="col-6 col-md-3">
-                <div class="book-card shadow-sm h-100">
-                    <div class="cover-container">
-                        <img src="uploads/covers/<?= $buku['cover_image'] ?>" class="cover-img">
-                        <span class="category-badge"><?= $buku['cat_name'] ?></span>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold text-truncate mb-1"><?= $buku['title'] ?></h6>
-                        <small class="text-muted d-block mb-3"><?= $buku['author'] ?></small>
-                        
-                        <div class="d-grid gap-2">
-                            <a href="login?pesan=belum_login" class="btn btn-outline-primary btn-sm rounded-pill">Baca Sekarang</a>
-                            <a href="login?pesan=belum_login" class="btn btn-light btn-sm text-danger"><i class="bi bi-heart"></i> Simpan</a>
+        <div class="cards-grid">
+            <?php while ($book = mysqli_fetch_assoc($query_books)) { ?>
+                <div class="book-card" onclick="window.location.href='login.php'">
+                    <div class="cover-wrapper">
+                        <img src="uploads/covers/<?php echo $book['cover_image']; ?>" class="book-cover-img">
+                        <div style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:white; padding:5px; border-radius:50%;">
+                            <i class="fas fa-lock" style="font-size:12px;"></i>
                         </div>
                     </div>
+                    <div class="book-info">
+                        <h3><?php echo $book['title']; ?></h3>
+                        <p><?php echo $book['author']; ?></p>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
         </div>
+    </section>
+
+    <section class="categories" style="margin-top: 40px;">
+        <div class="section-header"><h2>Kategori</h2></div>
+        <div class="tags">
+            <span class="tag active">All</span>
+            <?php while ($cat = mysqli_fetch_assoc($query_categories)) { ?>
+                <a href="login.php" class="tag"><?php echo $cat['name']; ?> <i class="fas fa-lock" style="font-size:10px; margin-left:5px;"></i></a>
+            <?php } ?>
+        </div>
+    </section>
+</main>
+
+<aside class="right-panel" id="rightPanel" style="justify-content: center;">
+    <div class="book-detail">
+        <div class="detail-cover" id="coverContainer" style="display: none;">
+            <img id="detailImage" src="" alt="Cover" />
+        </div>
+        <div class="detail-info">
+            <h2>Akses Terbatas</h2>
+            <p class="description" style="text-align: center; color: #8da2c0;">
+                Anda perlu login untuk melihat detail buku, membaca, mencari, atau menambahkan ke favorit.
+            </p>
+            <a href="login.php" class="read-now-btn">
+                Login Sekarang <i class="fas fa-sign-in-alt"></i>
+            </a>
+        </div>
     </div>
+</aside>
 
-    <footer class="mt-5 py-4 text-center text-muted border-top bg-white">
-        <small>&copy; 2024 Perpustakaan Digital</small>
-    </footer>
-
-</body>
-</html>
+<?php include 'layout/footer.php'; ?>

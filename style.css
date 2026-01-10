@@ -539,29 +539,49 @@ header {
 
 /* ... CSS DASAR SAMA SEPERTI SEBELUMNYA ... */
 
-/* UPDATE BAGIAN COVER BUKU DI GRID */
+/* 1. Agar Judul dan Penulis rata tengah */
 .book-card {
-  background: transparent;
-  border-radius: 15px;
-  transition: transform 0.2s;
-  cursor: pointer;
-  overflow: hidden;
+  text-align: center; /* Membuat teks judul/penulis di bawah gambar jadi tengah */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Memastikan elemen di dalam kartu rata tengah */
 }
 
+/* 2. Wrapper Cover: Kunci posisi icon love di sini */
 .cover-wrapper {
-  height: 220px; /* Tinggi cover diperbesar */
+  position: relative; /* PENTING: Agar icon absolute tidak keluar area ini */
   width: 100%;
+  height: 220px; /* Tinggi tetap agar rapi */
   border-radius: 12px;
-  overflow: hidden;
+  overflow: hidden; /* Agar gambar/icon tidak bocor keluar sudut tumpul */
+  display: flex; /* Flexbox untuk menengahkan gambar */
+  justify-content: center;
+  align-items: center;
   margin-bottom: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0; /* Warna cadangan jika gambar gagal load */
 }
 
+/* 3. Gambar Cover: Agar full dan rapi */
 .book-cover-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Agar gambar memenuhi kotak tanpa gepeng */
-  transition: transform 0.3s;
+  object-fit: cover; /* Gambar akan memenuhi kotak tanpa gepeng */
+  display: block;
+}
+
+/* 4. Posisi Badge Love (Favorite Count) */
+.fav-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff4757;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  z-index: 10; /* Pastikan di atas gambar */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .book-card:hover .book-cover-img {

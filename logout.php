@@ -6,6 +6,6 @@ session_unset();
 session_destroy();
 
 // Redirect ke halaman login dengan pesan
-header("location:login.php?pesan=logout");
+header("location:index.php");
 exit();
 ?>

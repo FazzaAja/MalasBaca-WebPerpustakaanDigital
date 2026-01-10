@@ -1,12 +1,23 @@
 RewriteEngine On
 
-# 1. Mencegah user melihat daftar file (directory listing)
-Options -Indexes
+# -----------------------------------------------------------
+# BAGIAN 1: Paksa Hapus .php (Redirect Eksternal)
+# Ini yang membuat Anda TIDAK PERLU ubah kodingan satu per satu.
+# Jika browser melihat ada .php, dia akan reload dan membuangnya.
+# -----------------------------------------------------------
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+RewriteRule ^ %1 [R=301,L]
 
-# 2. Jika user mengetik /file, server akan mencari /file.php
+# -----------------------------------------------------------
+# BAGIAN 2: Baca File Tanpa Ekstensi (Rewrite Internal)
+# Agar server mengerti bahwa "login" itu maksudnya "login.php"
+# -----------------------------------------------------------
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.*)$ $1.php [L]
+RewriteRule ^(.*?)/?$ $1.php [L]
 
-# 3. Menangani error 404 (Opsional, buat file 404.php jika mau)
-# ErrorDocument 404 /404.php
+# -----------------------------------------------------------
+# BAGIAN 3: Mengatur Index Folder
+# Agar folder /user/ otomatis buka /user/index.php
+# -----------------------------------------------------------
+DirectoryIndex index.php index.html

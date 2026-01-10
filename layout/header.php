@@ -1,46 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Perpus Digital</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; overflow-x: hidden; }
-        .card { border: none; }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookBase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="<?php echo $path; ?>style.css" />
 </head>
-<body class="d-flex flex-column min-vh-100 bg-light">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
-  <div class="container flex-grow-1">
-    <a class="navbar-brand fw-bold" href="index.php">📚 Admin Perpus</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="index.php">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="kategori.php">Kategori</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="buku.php">Data Buku</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-danger fw-bold" href="../logout.php">Logout</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="container"> 
-
-</div> 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<body>
+    <div class="container">
