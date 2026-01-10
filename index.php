@@ -8,10 +8,18 @@ if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'member') {
 
 $path = ""; 
 include 'config/database.php';
+include 'functions.php';
 
-// Tampilkan saja buku terbaru sebagai "Teaser"
-$query_books = mysqli_query($conn, "SELECT * FROM books ORDER BY id DESC LIMIT 8");
-$query_categories = mysqli_query($conn, "SELECT * FROM categories");
+// Halaman: Beranda publik
+// Fitur:
+//  - Menampilkan teaser: buku terbaru (limited)
+//  - Menampilkan semua kategori sebagai tag
+//  - Arahkan pengguna non-logged-in ke login jika mengakses fitur yang terkunci
+
+// Ambil 8 buku terbaru untuk tampilan rekomendasi di beranda
+$query_books = get_latest_books($conn, 8);
+// Ambil daftar kategori untuk tag
+$query_categories = get_categories($conn);
 
 include 'layout/header.php';
 include 'layout/sidebar.php';
@@ -32,6 +40,7 @@ include 'layout/sidebar.php';
         </div>
     </header>
 
+    <!-- Section: Rekomendasi Terkini (teaser) -->
     <section class="recommended">
         <div class="section-header">
             <h2>Rekomendasi Terkini</h2>
@@ -56,6 +65,7 @@ include 'layout/sidebar.php';
         </div>
     </section>
 
+    <!-- Section: Kategori (tags) - mengarahkan ke login jika pengguna belum login -->
     <section class="categories" style="margin-top: 40px;">
         <div class="section-header"><h2>Kategori</h2></div>
         <div class="tags">

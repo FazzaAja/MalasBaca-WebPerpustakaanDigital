@@ -8,37 +8,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'member') {
 
 $path = "../"; 
 include '../config/database.php';
+include '../functions.php';
 
-// 1. QUERY BUKU TERPOPULER (FAVORIT TERBANYAK)
-// Kita gunakan LEFT JOIN ke tabel favorites dan hitung jumlahnya
-$query_popular = mysqli_query($conn, "
-    SELECT books.*, COUNT(favorites.id) as fav_count 
-    FROM books 
-    LEFT JOIN favorites ON books.id = favorites.book_id 
-    GROUP BY books.id 
-    ORDER BY fav_count DESC 
-    LIMIT 4
-");
+// Halaman: User Dashboard (Member)
+// Fitur:
+//  - Cek otentikasi (di atas), menampilkan nama user
+//  - Section: "Paling Banyak Disukai" (top favorites)
+//  - Search & Filter berdasarkan kategori
+//  - Menampilkan daftar buku sesuai filter
 
-// 2. QUERY UTAMA (FILTER & SEARCH)
+// 1. Ambil buku populer (fav_count) via helper
+$query_popular = get_popular_books($conn, 4);
+
+// 2. Ambil parameter filter/search dari querystring
 $cat_id = isset($_GET['kategori']) ? $_GET['kategori'] : null;
-$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : null;
+$search = isset($_GET['search']) ? $_GET['search'] : null; // sanitasi dilakukan di helper
 
-$query_str = "SELECT * FROM books";
-
+// 3. Tentukan judul section (dependency: search / kategori)
 if ($search) {
-    $query_str .= " WHERE title LIKE '%$search%' OR author LIKE '%$search%'";
-    $section_title = "Hasil Pencarian: '$search'";
+    $section_title = "Hasil Pencarian: '" . htmlspecialchars($search) . "'";
 } elseif ($cat_id) {
-    $query_str .= " WHERE category_id = '$cat_id'";
     $section_title = "Menampilkan Kategori Pilihan";
 } else {
-    $query_str .= " ORDER BY id DESC"; // Default buku terbaru di bawah
     $section_title = "Semua Koleksi Buku";
 }
 
-$query_books = mysqli_query($conn, $query_str);
-$query_categories = mysqli_query($conn, "SELECT * FROM categories");
+// 4. Ambil daftar buku sesuai filter via helper (mengembalikan mysqli_result)
+$query_books = get_books_filtered($conn, $search, $cat_id);
+
+// 5. Ambil daftar kategori untuk sidebar/tag
+$query_categories = get_categories($conn);
 $username = $_SESSION['username'];
 
 include '../layout/header.php';
@@ -110,7 +109,7 @@ include '../layout/sidebar.php';
 
     <hr style="border: 0; border-top: 1px solid #e0e7ff; margin-bottom: 30px;">
 
-    <section class="categories" style="margin-bottom: 30px;">
+    <section class="categories" id="categories" style="margin-bottom: 30px;">
         <div class="section-header"><h2>Jelajahi Kategori</h2></div>
         <div class="tags">
             <a href="./" class="tag <?php echo $cat_id == null ? 'active' : ''; ?>">Semua</a>
@@ -123,6 +122,9 @@ include '../layout/sidebar.php';
         </div>
     </section>
 
+    <!-- Section: Recommended / Search Results
+         Displays books according to search or selected category.
+         If no filter is applied, shows all books (latest first). -->
     <section class="recommended">
         <div class="section-header">
             <h2><?php echo $section_title; ?></h2>
@@ -162,7 +164,7 @@ include '../layout/sidebar.php';
 </main>
 
 <aside class="right-panel" id="rightPanel" style="justify-content: center; align-items: center; display: flex;">
-    
+    <!-- Right panel: menampilkan detail buku saat diklik (cover, deskripsi, aksi baca/favorit) -->
     <div class="book-detail" style="text-align: center; width: 100%; display: flex; flex-direction: column; align-items: center;">
         
         <div class="detail-cover" id="coverContainer" style="display: none; margin: 0 auto 20px auto;">

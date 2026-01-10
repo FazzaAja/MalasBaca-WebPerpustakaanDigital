@@ -1,7 +1,12 @@
 <?php
 include '../auth_check.php';
 include '../config/database.php';
+include '../functions.php';
 include '../layout/header.php';
+
+// Halaman: Admin - Data Buku
+// Fitur: Menampilkan daftar buku (cover, informasi, kategori, link PDF) dan aksi (Edit, Hapus).
+// Sumber data: helper get_books($conn) di `functions.php`.
 ?>
 
 <div class="card shadow-sm">
@@ -25,12 +30,15 @@ include '../layout/header.php';
                 <tbody>
                     <?php
                     $no = 1;
-                    // Join tabel books dan categories (LEFT JOIN agar jika kategori dihapus, buku tetap muncul)
-                    $query = mysqli_query($conn, "SELECT books.*, categories.name as cat_name 
-                                                  FROM books 
-                                                  LEFT JOIN categories ON books.category_id = categories.id 
-                                                  ORDER BY books.id DESC");
-                    
+                    // Ambil data buku melalui helper
+                    // Loop: setiap baris menampilkan:
+                    //  - Cover (thumbnail)
+                    //  - Info buku (judul, penulis)
+                    //  - Kategori (badge)
+                    //  - Link ke file PDF
+                    //  - Aksi: Edit (buka form) dan Hapus (menghapus record + file fisik)
+                    $query = get_books($conn);
+
                     while ($row = mysqli_fetch_assoc($query)) {
                     ?>
                     <tr>
@@ -53,6 +61,7 @@ include '../layout/header.php';
                             </a>
                         </td>
                         <td>
+                            <!-- Aksi: Edit membuka `buku_edit.php`; Hapus memanggil `buku_hapus.php` (menghapus juga file fisik melalui delete_book()) -->
                             <a href="buku_edit.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm text-white mb-1">Edit</a>
                             <a href="buku_hapus.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm mb-1" 
                                onclick="return confirm('Yakin hapus buku ini? File fisik juga akan dihapus.')">Hapus</a>

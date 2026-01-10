@@ -1,58 +1,22 @@
 <?php
 include '../auth_check.php';
 include '../config/database.php';
+include '../functions.php';
 include '../layout/header.php';
 
+// Halaman: Edit Buku
+// Feature: prefill form dengan data buku (get_book_by_id) dan proses update via update_book().
 $id = $_GET['id'];
-$query = mysqli_query($conn, "SELECT * FROM books WHERE id='$id'");
-$data = mysqli_fetch_assoc($query);
+$data = get_book_by_id($conn, $id);
 
 if (isset($_POST['update'])) {
-    $title = $_POST['title'];
-    $author = $_POST['author'];
-    $cat_id = $_POST['category_id'];
-    // $year dihapus
-    $desc = $_POST['description'];
-    
-    // Default file (pakai yang lama)
-    $cover_final = $data['cover_image'];
-    $pdf_final = $data['pdf_file'];
-
-    // 1. Cek Ganti Cover
-    if ($_FILES['cover_image']['name'] != "") {
-        $rand = rand();
-        $new_cover = $rand . '_' . $_FILES['cover_image']['name'];
-        if (move_uploaded_file($_FILES['cover_image']['tmp_name'], '../uploads/covers/' . $new_cover)) {
-            if (file_exists('../uploads/covers/' . $data['cover_image'])) {
-                unlink('../uploads/covers/' . $data['cover_image']);
-            }
-            $cover_final = $new_cover;
-        }
-    }
-
-    // 2. Cek Ganti PDF
-    if ($_FILES['pdf_file']['name'] != "") {
-        $rand = rand();
-        $new_pdf = $rand . '_' . $_FILES['pdf_file']['name'];
-        if (move_uploaded_file($_FILES['pdf_file']['tmp_name'], '../uploads/pdfs/' . $new_pdf)) {
-            if (file_exists('../uploads/pdfs/' . $data['pdf_file'])) {
-                unlink('../uploads/pdfs/' . $data['pdf_file']);
-            }
-            $pdf_final = $new_pdf;
-        }
-    }
-
-    // Query UPDATE diperbarui (release_year dihapus)
-    $sql = "UPDATE books SET 
-            title='$title', author='$author', category_id='$cat_id', 
-            description='$desc', 
-            cover_image='$cover_final', pdf_file='$pdf_final' 
-            WHERE id='$id'";
-
-    if (mysqli_query($conn, $sql)) {
+    $result = update_book($conn, $id, $_POST, $_FILES);
+    if ($result['success']) {
         echo "<script>alert('Buku berhasil diperbarui!'); window.location='buku.php';</script>";
+        exit;
     } else {
-        echo "<div class='alert alert-danger'>Gagal update: " . mysqli_error($conn) . "</div>";
+        $err = isset($result['error']) ? $result['error'] : 'Gagal update';
+        echo "<div class='alert alert-danger'>" . htmlspecialchars($err) . "</div>";
     }
 }
 ?>
@@ -64,6 +28,7 @@ if (isset($_POST['update'])) {
                 <h5 class="mb-0">Edit Buku</h5>
             </div>
             <div class="card-body">
+                <!-- FORM: Edit Buku - fields sama dengan tambah, file upload optional -->
                 <form action="" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label">Judul Buku</label>
@@ -75,12 +40,13 @@ if (isset($_POST['update'])) {
                             <label class="form-label">Kategori</label>
                             <select name="category_id" class="form-select" required>
                                 <?php
+                                // Ambil daftar kategori untuk dropdown (dipakai untuk memilih kategori buku)
                                 $c_query = mysqli_query($conn, "SELECT * FROM categories");
                                 while($c = mysqli_fetch_assoc($c_query)) {
                                     $selected = ($c['id'] == $data['category_id']) ? 'selected' : '';
                                     echo "<option value='".$c['id']."' $selected>".$c['name']."</option>";
                                 }
-                                ?>
+                                ?> 
                             </select>
                         </div>
                         <div class="col">
@@ -94,6 +60,7 @@ if (isset($_POST['update'])) {
                         <textarea name="description" class="form-control" rows="3"><?= $data['description'] ?></textarea>
                     </div>
 
+                    <!-- Menampilkan cover saat ini dan opsi untuk mengunggah cover baru. Jika kosong, cover lama tetap digunakan. -->
                     <div class="mb-3">
                         <label class="form-label">Cover Saat Ini</label><br>
                         <img src="../uploads/covers/<?= $data['cover_image'] ?>" width="100" class="mb-2 img-thumbnail">
@@ -101,6 +68,7 @@ if (isset($_POST['update'])) {
                         <small class="text-muted">*Biarkan kosong jika tidak ingin mengganti cover</small>
                     </div>
 
+                    <!-- Menampilkan link ke PDF lama dan opsi upload PDF baru. Jika kosong, file lama tetap dipertahankan. -->
                     <div class="mb-3">
                         <label class="form-label">File PDF Saat Ini</label><br>
                         <a href="../uploads/pdfs/<?= $data['pdf_file'] ?>" class="btn btn-sm btn-outline-primary mb-2" target="_blank">Cek PDF Lama</a>

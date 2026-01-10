@@ -1,19 +1,21 @@
 <?php
 include '../auth_check.php';
 include '../config/database.php';
+include '../functions.php';
 include '../layout/header.php';
 
+// Halaman: Edit Kategori
+// Feature: Mengambil data kategori lewat get_category_by_id() dan menyimpan via update_category() ?> 
+
 $id = $_GET['id'];
-$query = mysqli_query($conn, "SELECT * FROM categories WHERE id='$id'");
-$data = mysqli_fetch_assoc($query);
+$data = get_category_by_id($conn, $id);
 
 // Proses Update
 if (isset($_POST['update'])) {
     $nama = $_POST['name'];
-    $update = mysqli_query($conn, "UPDATE categories SET name='$nama' WHERE id='$id'");
-    
-    if ($update) {
+    if (update_category($conn, $id, $nama)) {
         echo "<script>alert('Kategori berhasil diperbarui!'); window.location='kategori.php';</script>";
+        exit;
     } else {
         echo "<div class='alert alert-danger'>Gagal update: " . mysqli_error($conn) . "</div>";
     }

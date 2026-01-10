@@ -1,15 +1,16 @@
 <?php
 include '../auth_check.php';
 include '../config/database.php';
+include '../functions.php';
 include '../layout/header.php';
 
 // Proses Simpan
+// Feature: Menyimpan kategori baru melalui helper add_category()
 if (isset($_POST['simpan'])) {
     $nama = $_POST['name'];
-    $simpan = mysqli_query($conn, "INSERT INTO categories (name) VALUES ('$nama')");
-    
-    if ($simpan) {
+    if (add_category($conn, $nama)) {
         echo "<script>alert('Kategori berhasil ditambahkan!'); window.location='kategori.php';</script>";
+        exit;
     } else {
         echo "<div class='alert alert-danger'>Gagal menyimpan: " . mysqli_error($conn) . "</div>";
     }

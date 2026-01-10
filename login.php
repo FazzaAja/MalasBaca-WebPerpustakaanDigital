@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'config/database.php';
+include 'functions.php';
 
 // Jika sudah login, langsung arahkan sesuai role (agar tidak perlu login lagi)
 if (isset($_SESSION['user_role'])) {
@@ -15,35 +16,22 @@ if (isset($_SESSION['user_role'])) {
 $error = "";
 
 // PROSES LOGIN
+// Feature: Authenticate user using login_user() helper, then set session and redirect based on role
 if (isset($_POST['login'])) {
-    // 1. Ambil input dan bersihkan (Sanitasi)
-    $identifier = mysqli_real_escape_string($conn, $_POST['username']); // Ini bisa jadi Username atau Email
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
+    $identifier = $_POST['username'];
+    $password = $_POST['password'];
+    $user = login_user($conn, $identifier, $password);
+    if ($user) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['user_role'] = $user['role'];
+        // keep legacy keys used elsewhere
+        $_SESSION['status'] = 'login';
+        $_SESSION['role'] = $user['role'];
 
-    // 2. Enkripsi password input dengan MD5
-    $password_md5 = md5($password);
-
-    // 3. Query Cek Username ATAU Email DAN Password
-    // Logika: (username COCOK atau email COCOK) DAN password COCOK
-    $query = "SELECT * FROM users 
-              WHERE (username = '$identifier' OR email = '$identifier') 
-              AND password = '$password_md5'";
-
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) === 1) {
-        $row = mysqli_fetch_assoc($result);
-        
-        // SET SESSION
-        $_SESSION['user_id'] = $row['id'];
-        $_SESSION['username'] = $row['username'];
-        $_SESSION['user_role'] = $row['role'];
-
-        // 4. CEK ROLE & REDIRECT (Perbaikan Utama)
-        if ($row['role'] == 'admin') {
+        if ($user['role'] == 'admin') {
             header("Location: admin/index.php");
-        } else if ($row['role'] == 'member') {
-            // Arahkan member ke folder user
+        } else {
             header("Location: user/index.php");
         }
         exit;
@@ -161,6 +149,7 @@ if (isset($_POST['login'])) {
             </div>
         <?php endif; ?>
 
+        <!-- FORM: Login - masukkan username/email & password -->
         <form action="" method="POST">
             <div class="form-group">
                 <label>Username atau Email</label>

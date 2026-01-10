@@ -1,7 +1,11 @@
 <?php
 include '../auth_check.php';
 include '../config/database.php';
+include '../functions.php';
 include '../layout/header.php';
+
+ // Halaman: Admin - Kategori
+// Fitur: menampilkan daftar kategori serta aksi (Edit, Hapus). Data diambil dari get_categories(). ?>
 ?>
 
 <div class="card shadow-sm">
@@ -21,7 +25,7 @@ include '../layout/header.php';
             <tbody>
                 <?php
                 $no = 1;
-                $query = mysqli_query($conn, "SELECT * FROM categories ORDER BY id DESC");
+                $query = get_categories($conn);
                 while ($row = mysqli_fetch_assoc($query)) {
                 ?>
                 <tr>

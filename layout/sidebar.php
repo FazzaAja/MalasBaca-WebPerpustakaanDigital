@@ -18,7 +18,7 @@ $login_alert = "login"; // Link untuk guest
             <i class="fas fa-home"></i> Discover
         </a>
         
-        <a href="<?php echo ($role == 'member') ? $path.'user/index' : $path.$login_alert; ?>">
+        <a href="<?php echo ($role == 'member') ? '#categories' : $path.$login_alert; ?>">
             <i class="fas fa-th-large"></i> Category
         </a>
         

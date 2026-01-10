@@ -1,7 +1,10 @@
 <?php
 session_start();
-if (!isset($_SESSION['status']) || $_SESSION['status'] != "login" || $_SESSION['role'] != 'admin') {
-    header("location:../login.php?pesan=belum_login"); // Mundur satu folder karena file ini akan di-include di folder /admin
+include 'functions.php';
+// auth_check: memastikan user login dan ber-role 'admin'
+// Digunakan oleh semua halaman di folder /admin. Jika tidak memenuhi, redirect ke ../login.php
+if (!is_logged_in('admin')) {
+    header("location:../login.php?pesan=belum_login");
     exit();
 }
 ?>
