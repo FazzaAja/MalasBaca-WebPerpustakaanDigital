@@ -7,7 +7,7 @@ $login_alert = "login"; // Link untuk guest
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <div class="logo"><i class="fas fa-book-open"></i> BookBase</div>
+        <div class="logo"><i class="fas fa-bed"></i> MalasBaca</div>
         <button class="close-btn" onclick="toggleSidebar()">
             <i class="fas fa-times"></i>
         </button>

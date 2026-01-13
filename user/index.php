@@ -238,7 +238,7 @@ include '../layout/sidebar.php';
         font-weight: 500;
         pointer-events: none; /* Agar tidak mengganggu klik */
     ">
-        &copy; <?php echo date('Y'); ?> BookBase Digital Library.
+        &copy; <?php echo date('Y'); ?> MalasBaca Digital Library.
     </div>
 </aside>
 

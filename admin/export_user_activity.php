@@ -22,7 +22,7 @@ echo "\xEF\xBB\xBF";
 $output = fopen('php://output', 'w');
 
 // Header Info
-fputcsv($output, ['LAPORAN AKTIVITAS USER - BOOKBASE']);
+fputcsv($output, ['LAPORAN AKTIVITAS USER - MALASBACA']);
 fputcsv($output, ['Tanggal Export', date('d/m/Y H:i:s')]);
 fputcsv($output, ['Diexport oleh', $_SESSION['username']]);
 fputcsv($output, []); // Baris kosong

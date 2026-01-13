@@ -72,7 +72,7 @@ if (isset($_POST['register'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Akun - BookBase</title>
+    <title>Daftar Akun - MalasBaca</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -195,7 +195,7 @@ if (isset($_POST['register'])) {
     <div class="register-container">
         <div class="register-header">
             <h2>Daftar Akun Baru</h2>
-            <p>Buat akun untuk mengakses BookBase</p>
+            <p>Buat akun untuk mengakses MalasBaca</p>
         </div>
 
         <?php if($error): ?>

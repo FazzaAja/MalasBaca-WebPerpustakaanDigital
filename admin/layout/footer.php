@@ -8,10 +8,10 @@
             
             <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
                 <span class="text-muted">
-                    &copy; <?= date('Y') ?> <strong>Perpustakaan Digital</strong>. 
+                    &copy; <?= date('Y') ?> <strong>MalasBaca</strong>. 
                 </span>
                 <br>
-                <small class="text-secondary">Dikelola oleh Admin Perpus.</small>
+                <small class="text-secondary">Dikelola oleh Admin MalasBaca.</small>
             </div>
 
             <div class="col-md-6 text-center text-md-end">
