@@ -30,6 +30,9 @@
             document.getElementById('detailDescription').style.marginTop = '0px'; // Reset margin
             document.getElementById('detailDescription').style.textAlign = 'left'; // Reset align
             document.getElementById('detailId').innerText = id;
+            // Set hidden favorite form input (if present)
+            var favInput = document.getElementById('favBookId');
+            if (favInput) favInput.value = id;
             
             // 4. Update Gambar Cover
             const img = document.getElementById('detailImage');

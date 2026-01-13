@@ -252,6 +252,46 @@ function is_logged_in($role = null) {
     return false;
 }
 
+/**
+ * add_favorite - Menambahkan favorite (menghindari duplikat)
+ * Params: mysqli $conn, int $user_id, int $book_id
+ * Returns: array ['success' => bool, 'message' => string]
+ */
+function add_favorite($conn, $user_id, $book_id) {
+    $user_id = (int) $user_id;
+    $book_id = (int) $book_id;
+
+    // Cek apakah sudah ada
+    $sql = "SELECT id FROM favorites WHERE user_id = ? AND book_id = ? LIMIT 1";
+    if ($stmt = mysqli_prepare($conn, $sql)) {
+        mysqli_stmt_bind_param($stmt, "ii", $user_id, $book_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        if (mysqli_stmt_num_rows($stmt) > 0) {
+            mysqli_stmt_close($stmt);
+            return ['success' => false, 'message' => 'Anda sudah menandai buku ini sebagai favorit.'];
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        return ['success' => false, 'message' => 'Prepared statement gagal: ' . mysqli_error($conn)];
+    }
+
+    // Insert favorite
+    $insert = "INSERT INTO favorites (user_id, book_id, created_at) VALUES (?, ?, NOW())";
+    if ($stmt = mysqli_prepare($conn, $insert)) {
+        mysqli_stmt_bind_param($stmt, "ii", $user_id, $book_id);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+            return ['success' => true, 'message' => 'Berhasil menambahkan ke favorit.'];
+        } else {
+            $err = mysqli_error($conn);
+            mysqli_stmt_close($stmt);
+            return ['success' => false, 'message' => 'Insert gagal: ' . $err];
+        }
+    } else {
+        return ['success' => false, 'message' => 'Prepared statement insert gagal: ' . mysqli_error($conn)];
+    }
+}
 
 ?>
 

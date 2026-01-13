@@ -10,6 +10,23 @@ $path = "../";
 include '../config/database.php';
 include '../functions.php';
 
+// Handle favorite form submission (simple PHP handler)
+$fav_msg = null;
+// If a flash message exists (from previous POST), retrieve and clear it
+if (isset($_SESSION['fav_msg'])) {
+    $fav_msg = $_SESSION['fav_msg'];
+    unset($_SESSION['fav_msg']);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite_book_id'])) {
+    $res = add_favorite($conn, $_SESSION['user_id'], (int)$_POST['favorite_book_id']);
+    // Use Post/Redirect/Get: store message in session and redirect to avoid resubmission on reload
+    $_SESSION['fav_msg'] = $res['message'];
+    $redirect = $_SERVER['REQUEST_URI'];
+    header("Location: $redirect");
+    exit;
+}
+
 // Halaman: User Dashboard (Member)
 // Fitur:
 //  - Cek otentikasi (di atas), menampilkan nama user
@@ -60,6 +77,11 @@ include '../layout/sidebar.php';
             <span class="user-name"><?php echo $username; ?></span>
         </div>
     </header>
+    <?php if(!empty($fav_msg)): ?>
+        <div style="background:#e9f6f2; border:1px solid #c7f0dd; color:#066a44; padding:10px; border-radius:6px; margin: 15px 0;">
+            <?php echo htmlspecialchars($fav_msg); ?>
+        </div>
+    <?php endif; ?>
 
    <section class="popular-section" style="margin-bottom: 30px;">
         <div class="section-header">
@@ -191,9 +213,12 @@ include '../layout/sidebar.php';
                 <a href="#" id="readBtn" class="read-now-btn" target="_blank" style="margin-bottom: 10px; display: block;">
                     Baca Sekarang <i class="fas fa-book-open"></i>
                 </a>
-                <button class="read-now-btn" style="background:#ff4757; width: 100%;">
-                    <i class="fas fa-heart"></i> Tambah ke Favorit
-                </button>
+                <form method="POST" style="margin-top:10px;">
+                    <input type="hidden" name="favorite_book_id" id="favBookId" value="">
+                    <button type="submit" class="read-now-btn" style="background:#ff4757; width: 100%;">
+                        <i class="fas fa-heart"></i> Tambah ke Favorit
+                    </button>
+                </form>
             </div>
         </div>
     </div>
