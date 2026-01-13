@@ -2,12 +2,20 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
 // Halaman: Edit Buku
 // Feature: prefill form dengan data buku (get_book_by_id) dan proses update via update_book().
-$id = $_GET['id'];
+$id = validate_integer($_GET['id'] ?? 0);
+if ($id === null || $id <= 0) {
+    echo "<script>alert('ID tidak valid'); window.location='buku.php';</script>";
+    exit;
+}
 $data = get_book_by_id($conn, $id);
+if (!$data) {
+    echo "<script>alert('Buku tidak ditemukan'); window.location='buku.php';</script>";
+    exit;
+}
 
 if (isset($_POST['update'])) {
     $result = update_book($conn, $id, $_POST, $_FILES);

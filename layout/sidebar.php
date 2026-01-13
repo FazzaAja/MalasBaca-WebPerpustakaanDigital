@@ -22,10 +22,6 @@ $login_alert = "login"; // Link untuk guest
             <i class="fas fa-th-large"></i> Category
         </a>
         
-        <a href="<?php echo ($role == 'member') ? '#' : $path.$login_alert; ?>">
-            <i class="fas fa-book"></i> My Library <?php if($role=='guest') echo '<i class="fas fa-lock" style="font-size:10px; float:right; margin-top:5px;"></i>'; ?>
-        </a>
-        
         <a href="<?php echo ($role == 'member') ? $path.'user/favorites.php' : $path.$login_alert; ?>">
             <i class="fas fa-heart"></i> Favourite <?php if($role=='guest') echo '<i class="fas fa-lock" style="font-size:10px; float:right; margin-top:5px;"></i>'; ?>
         </a>

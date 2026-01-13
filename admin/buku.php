@@ -2,7 +2,7 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
 // Halaman: Admin - Data Buku
 // Fitur: Menampilkan daftar buku (cover, informasi, kategori, link PDF) dan aksi (Edit, Hapus).
@@ -44,7 +44,7 @@ include '../layout/header.php';
                     <tr>
                         <td><?= $no++; ?></td>
                         <td>
-                            <img src="../uploads/covers/<?= $row['cover_image']; ?>" 
+                            <img src="<?= cover_url($path, $row['cover_image']); ?>" 
                                  class="img-thumbnail" 
                                  style="height: 80px; width: 60px; object-fit: cover;">
                         </td>
@@ -56,7 +56,7 @@ include '../layout/header.php';
                             <span class="badge bg-secondary"><?= $row['cat_name'] ?? 'Tak Berkategori'; ?></span>
                         </td>
                         <td>
-                            <a href="../uploads/pdfs/<?= $row['pdf_file']; ?>" target="_blank" class="btn btn-sm btn-outline-danger">
+                            <a href="<?= cover_url($path, $row['pdf_file']); ?>" target="_blank" class="btn btn-sm btn-outline-danger">
                                 📄 PDF
                             </a>
                         </td>

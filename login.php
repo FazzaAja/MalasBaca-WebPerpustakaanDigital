@@ -18,25 +18,30 @@ $error = "";
 // PROSES LOGIN
 // Feature: Authenticate user using login_user() helper, then set session and redirect based on role
 if (isset($_POST['login'])) {
-    $identifier = $_POST['username'];
-    $password = $_POST['password'];
-    $user = login_user($conn, $identifier, $password);
-    if ($user) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['user_role'] = $user['role'];
-        // keep legacy keys used elsewhere
-        $_SESSION['status'] = 'login';
-        $_SESSION['role'] = $user['role'];
-
-        if ($user['role'] == 'admin') {
-            header("Location: admin/index.php");
-        } else {
-            header("Location: user/index.php");
-        }
-        exit;
+    $identifier = sanitize_input($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    
+    if (empty($identifier) || empty($password)) {
+        $error = "Username/Email dan Password wajib diisi!";
     } else {
-        $error = "Username/Email atau Password salah!";
+        $user = login_user($conn, $identifier, $password);
+        if ($user) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['user_role'] = $user['role'];
+            // keep legacy keys used elsewhere
+            $_SESSION['status'] = 'login';
+            $_SESSION['role'] = $user['role'];
+
+            if ($user['role'] == 'admin') {
+                header("Location: admin/index.php");
+            } else {
+                header("Location: user/index.php");
+            }
+            exit;
+        } else {
+            $error = "Username/Email atau Password salah!";
+        }
     }
 }
 ?>
@@ -164,7 +169,8 @@ if (isset($_POST['login'])) {
             <button type="submit" name="login" class="btn-login">Masuk Sekarang</button>
         </form>
 
-        <a href="index" class="back-link">← Kembali ke Beranda</a>
+        <a href="register.php" class="back-link">Belum punya akun? Daftar di sini</a>
+        <a href="index.php" class="back-link">← Kembali ke Beranda</a>
     </div>
 
 </body>

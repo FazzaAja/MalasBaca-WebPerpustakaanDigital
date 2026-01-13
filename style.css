@@ -287,9 +287,13 @@ header {
   font-size: 14px;
   color: var(--text-dark);
   margin-bottom: 4px;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.4;
+  max-height: 2.8em;
+  width: 100%;
 }
 
 .book-info p {

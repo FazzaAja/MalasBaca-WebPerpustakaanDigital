@@ -2,7 +2,7 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
 if (isset($_POST['simpan'])) {
     $result = add_book($conn, $_POST, $_FILES);

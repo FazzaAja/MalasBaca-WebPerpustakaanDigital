@@ -1,3 +1,7 @@
+<?php
+// Pastikan $path tersedia untuk utilitas cover_url() di halaman admin
+if (!isset($path)) $path = '../';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Perpus Digital</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
     <style>
         body { background-color: #f8f9fa; overflow-x: hidden; }
         .card { border: none; }
@@ -30,6 +35,9 @@
           <a class="nav-link" href="buku.php">Data Buku</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="users.php">Pengguna</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link text-danger fw-bold" href="../logout.php">Logout</a>
         </li>
       </ul>
@@ -37,10 +45,4 @@
   </div>
 </nav>
 
-<div class="container"> 
-
-</div> 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<div class="container mb-5">

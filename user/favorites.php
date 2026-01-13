@@ -17,8 +17,13 @@ if (isset($_SESSION['fav_msg'])) {
     unset($_SESSION['fav_msg']);
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite_book_id'])) {
-    $res = add_favorite($conn, $_SESSION['user_id'], (int)$_POST['favorite_book_id']);
-    $_SESSION['fav_msg'] = $res['message'];
+    $book_id = validate_integer($_POST['favorite_book_id'] ?? 0);
+    if ($book_id !== null && $book_id > 0) {
+        $res = add_favorite($conn, $_SESSION['user_id'], $book_id);
+        $_SESSION['fav_msg'] = $res['message'];
+    } else {
+        $_SESSION['fav_msg'] = 'ID buku tidak valid';
+    }
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }

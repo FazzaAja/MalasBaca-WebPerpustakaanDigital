@@ -2,11 +2,10 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
  // Halaman: Admin - Kategori
 // Fitur: menampilkan daftar kategori serta aksi (Edit, Hapus). Data diambil dari get_categories(). ?>
-?>
 
 <div class="card shadow-sm">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">

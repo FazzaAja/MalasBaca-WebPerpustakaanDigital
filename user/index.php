@@ -19,9 +19,14 @@ if (isset($_SESSION['fav_msg'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite_book_id'])) {
-    $res = add_favorite($conn, $_SESSION['user_id'], (int)$_POST['favorite_book_id']);
+    $book_id = validate_integer($_POST['favorite_book_id'] ?? 0);
+    if ($book_id !== null && $book_id > 0) {
+        $res = add_favorite($conn, $_SESSION['user_id'], $book_id);
+        $_SESSION['fav_msg'] = $res['message'];
+    } else {
+        $_SESSION['fav_msg'] = 'ID buku tidak valid';
+    }
     // Use Post/Redirect/Get: store message in session and redirect to avoid resubmission on reload
-    $_SESSION['fav_msg'] = $res['message'];
     $redirect = $_SERVER['REQUEST_URI'];
     header("Location: $redirect");
     exit;
@@ -38,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite_book_id'])) 
 $query_popular = get_popular_books($conn, 4);
 
 // 2. Ambil parameter filter/search dari querystring
-$cat_id = isset($_GET['kategori']) ? $_GET['kategori'] : null;
-$search = isset($_GET['search']) ? $_GET['search'] : null; // sanitasi dilakukan di helper
+$cat_id = validate_integer($_GET['kategori'] ?? null);
+$search = isset($_GET['search']) ? sanitize_input($_GET['search']) : null;
 
 // 3. Tentukan judul section (dependency: search / kategori)
 if ($search) {
@@ -202,11 +207,11 @@ include '../layout/sidebar.php';
             </p>
             
             <div id="detailStats" class="stats" style="display: none; justify-content: center; gap: 15px; margin: 20px 0;">
-                <div><strong>ID: <span id="detailId">-</span></strong><small>ID</small></div>
+                <div><strong>ID: <span id="detailId">-</span></strong> <small>ID</small></div>
                 <div class="border-lr" style="border-left:1px solid #ffffff33; border-right:1px solid #ffffff33; padding: 0 15px;">
-                    <strong>PDF</strong><small>Format</small>
+                    <strong>PDF</strong> <small>Format</small>
                 </div>
-                <div><strong>Free</strong><small>Price</small></div>
+                <div><strong>Free</strong> <small>Price</small></div>
             </div>
 
             <div class="action-buttons" style="display:none;" id="actionButtons">

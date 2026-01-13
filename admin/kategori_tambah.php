@@ -2,13 +2,15 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
 // Proses Simpan
 // Feature: Menyimpan kategori baru melalui helper add_category()
 if (isset($_POST['simpan'])) {
-    $nama = $_POST['name'];
-    if (add_category($conn, $nama)) {
+    $nama = sanitize_input($_POST['name'] ?? '');
+    if (!validate_string_length($nama, 1, 100)) {
+        echo "<div class='alert alert-danger'>Nama kategori harus 1-100 karakter</div>";
+    } elseif (add_category($conn, $nama)) {
         echo "<script>alert('Kategori berhasil ditambahkan!'); window.location='kategori.php';</script>";
         exit;
     } else {

@@ -36,7 +36,8 @@ include 'layout/sidebar.php';
             </div>
         </div>
         <div class="user-profile-mini">
-            <a href="login.php" class="see-all">Login / Register</a>
+            <a href="login.php" class="see-all" style="margin-right: 10px;">Login</a>
+            <a href="register.php" class="see-all">Daftar</a>
         </div>
     </header>
 

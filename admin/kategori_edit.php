@@ -2,18 +2,28 @@
 include '../auth_check.php';
 include '../config/database.php';
 include '../functions.php';
-include '../layout/header.php';
+include 'layout/header.php';
 
 // Halaman: Edit Kategori
 // Feature: Mengambil data kategori lewat get_category_by_id() dan menyimpan via update_category() ?> 
 
-$id = $_GET['id'];
+$id = validate_integer($_GET['id'] ?? 0);
+if ($id === null || $id <= 0) {
+    echo "<script>alert('ID tidak valid'); window.location='kategori.php';</script>";
+    exit;
+}
 $data = get_category_by_id($conn, $id);
+if (!$data) {
+    echo "<script>alert('Kategori tidak ditemukan'); window.location='kategori.php';</script>";
+    exit;
+}
 
 // Proses Update
 if (isset($_POST['update'])) {
-    $nama = $_POST['name'];
-    if (update_category($conn, $id, $nama)) {
+    $nama = sanitize_input($_POST['name'] ?? '');
+    if (!validate_string_length($nama, 1, 100)) {
+        echo "<div class='alert alert-danger'>Nama kategori harus 1-100 karakter</div>";
+    } elseif (update_category($conn, $id, $nama)) {
         echo "<script>alert('Kategori berhasil diperbarui!'); window.location='kategori.php';</script>";
         exit;
     } else {
