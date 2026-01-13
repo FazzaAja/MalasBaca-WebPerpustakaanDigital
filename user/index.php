@@ -117,12 +117,12 @@ include '../layout/sidebar.php';
                             <i class="fas fa-star"></i> <?php echo $pop['fav_count']; ?>
                         </div>
 
-                        <img src="<?php echo $path; ?>uploads/covers/<?php echo $pop['cover_image']; ?>" class="book-cover-img">
+                        <img src="<?php echo cover_url($path, $pop['cover_image']); ?>" class="book-cover-img">
                     </div>
                     
                     <div class="book-info">
                         <h3><?php echo $pop['title']; ?></h3>
-                        <p><?php echo $pop['author']; ?></p>
+                        <p id="categories"><?php echo $pop['author']; ?></p>
                     </div>
                 </div>
             <?php } ?>
@@ -131,7 +131,7 @@ include '../layout/sidebar.php';
 
     <hr style="border: 0; border-top: 1px solid #e0e7ff; margin-bottom: 30px;">
 
-    <section class="categories" id="categories" style="margin-bottom: 30px;">
+    <section class="categories" style="margin-bottom: 30px;">
         <div class="section-header"><h2>Jelajahi Kategori</h2></div>
         <div class="tags">
             <a href="./" class="tag <?php echo $cat_id == null ? 'active' : ''; ?>">Semua</a>
@@ -169,7 +169,7 @@ include '../layout/sidebar.php';
                         'member'
                     )">
                         <div class="cover-wrapper">
-                            <img src="<?php echo $path; ?>uploads/covers/<?php echo $book['cover_image']; ?>" class="book-cover-img">
+                            <img src="<?php echo cover_url($path, $book['cover_image']); ?>" class="book-cover-img">
                         </div>
                         <div class="book-info">
                             <h3><?php echo $book['title']; ?></h3>

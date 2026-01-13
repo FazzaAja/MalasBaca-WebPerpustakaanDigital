@@ -210,6 +210,8 @@ header {
   grid-template-columns: repeat(4, 1fr); /* 4 Kolom di desktop */
   gap: 20px;
   margin-bottom: 40px;
+  justify-items: center; /* center items horizontally in each grid cell */
+  align-items: start; /* align card content to top for consistent rows */
 }
 
 .book-card {
@@ -217,11 +219,17 @@ header {
   border-radius: 15px;
   transition: transform 0.2s;
   cursor: pointer;
+  max-width: 160px; /* match cover width */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .book-card:hover {
   transform: translateY(-5px);
 }
+ZZ
 
 /* Cover Placeholders */
 .cover-placeholder {
@@ -545,14 +553,16 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center; /* Memastikan elemen di dalam kartu rata tengah */
+  max-width: 160px; /* Prevent card content from growing wider than cover */
+  width: 100%;
 }
 
 /* 2. Wrapper Cover: Kunci posisi icon love di sini */
 .cover-wrapper {
   position: relative; /* PENTING: Agar icon absolute tidak keluar area ini */
-  width: 100%;
-  height: 220px; /* Tinggi tetap agar rapi */
-  border-radius: 12px;
+  width: 160px; /* Tetap sama lebar seperti #detailImage */
+  height: 240px; /* Tetap sama tinggi seperti #detailImage */
+  border-radius: 8px; /* Konsisten dengan panel detail */
   overflow: hidden; /* Agar gambar/icon tidak bocor keluar sudut tumpul */
   display: flex; /* Flexbox untuk menengahkan gambar */
   justify-content: center;
@@ -561,12 +571,23 @@ header {
   background-color: #f0f0f0; /* Warna cadangan jika gambar gagal load */
 }
 
+/* Small screens: gunakan ukuran sedikit lebih kecil agar grid muat */
+@media (max-width: 480px) {
+  .cover-wrapper {
+    width: 120px;
+    height: 180px;
+  }
+}
+
 /* 3. Gambar Cover: Agar full dan rapi */
 .book-cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Gambar akan memenuhi kotak tanpa gepeng */
   display: block;
+  border-radius: inherit; /* Ikuti radius wrapper agar konsisten */
+  transition: transform 220ms ease; /* Halus saat hover */
+  transform-origin: center center;
 }
 
 /* 4. Posisi Badge Love (Favorite Count) */
@@ -604,6 +625,8 @@ header {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 6px; /* Sedikit radius agar konsisten */
+  display: block;
 }
 
 /* Hilangkan style placeholder lama (.color-1, .color-2, dll) jika sudah tidak dipakai */

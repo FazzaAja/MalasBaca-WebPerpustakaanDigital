@@ -13,6 +13,21 @@ define('UPLOAD_COVERS', __DIR__ . '/uploads/covers/');
 define('UPLOAD_PDFS', __DIR__ . '/uploads/pdfs/');
 
 /**
+ * cover_url - Return a proper URL for a book cover.
+ * - If $cover is an absolute URL (http(s) or protocol-relative //), return it unchanged (CDN).
+ * - Otherwise, assume it's a local file name and prefix with $path + 'uploads/covers/'.
+ * Params: string $path, string $cover
+ * Returns: string
+ */
+function cover_url($path, $cover) {
+    $cover = trim($cover ?? '');
+    if ($cover === '') return '';
+    // absolute URL or protocol-relative
+    if (preg_match('/^(https?:)?\\/\\//i', $cover)) return $cover;
+    return ($path ?? '') . 'uploads/covers/' . ltrim($cover, '/');
+}
+
+/**
  * get_books - Ambil daftar buku beserta nama kategori
  * Params: mysqli $conn
  * Returns: mysqli_result (loopable)
@@ -29,6 +44,17 @@ function get_books($conn) {
 function get_popular_books($conn, $limit = 4) {
     $limit = (int) $limit;
     $sql = "SELECT books.*, COUNT(favorites.id) as fav_count FROM books LEFT JOIN favorites ON books.id = favorites.book_id GROUP BY books.id ORDER BY fav_count DESC LIMIT $limit";
+    return mysqli_query($conn, $sql);
+}
+
+/**
+ * get_user_favorites - Ambil daftar buku yang difavoritkan oleh user (terbaru dulu)
+ * Params: mysqli $conn, int $user_id
+ * Returns: mysqli_result
+ */
+function get_user_favorites($conn, $user_id) {
+    $user_id = (int) $user_id;
+    $sql = "SELECT books.*, favorites.created_at as fav_at FROM books JOIN favorites ON books.id = favorites.book_id WHERE favorites.user_id = $user_id ORDER BY favorites.created_at DESC";
     return mysqli_query($conn, $sql);
 }
 

@@ -26,6 +26,11 @@ if (!isset($path)) $path = '';
 
     // Final CSS href points to single style.css in project root
     $cssHref = $appBaseUrl . '/style.css';
+    // Add cache-busting based on file modification time to avoid stale CSS in browser
+    $cssFilePath = $projectPath . '/style.css';
+    if (file_exists($cssFilePath)) {
+        $cssHref .= '?v=' . filemtime($cssFilePath);
+    }
     ?>
     <!-- CSS loaded: <?php echo $cssHref; ?> -->
     <link rel="stylesheet" href="<?php echo $cssHref; ?>" />

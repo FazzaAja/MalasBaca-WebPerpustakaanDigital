@@ -36,7 +36,14 @@
             
             // 4. Update Gambar Cover
             const img = document.getElementById('detailImage');
-            img.src = globalPath + 'uploads/covers/' + cover;
+            // If cover is absolute (http(s) or protocol-relative), use it directly (CDN). Otherwise prefix with globalPath/uploads/covers/
+            if (/^(https?:)?\/\//i.test(cover)) {
+                img.src = cover;
+            } else if (!cover) {
+                img.src = '';
+            } else {
+                img.src = globalPath + 'uploads/covers/' + cover;
+            }
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.borderRadius = '5px';

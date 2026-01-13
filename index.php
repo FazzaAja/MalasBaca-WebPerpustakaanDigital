@@ -51,7 +51,7 @@ include 'layout/sidebar.php';
             <?php while ($book = mysqli_fetch_assoc($query_books)) { ?>
                 <div class="book-card" onclick="window.location.href='login.php'">
                     <div class="cover-wrapper">
-                        <img src="uploads/covers/<?php echo $book['cover_image']; ?>" class="book-cover-img">
+                        <img src="<?php echo cover_url($path, $book['cover_image']); ?>" class="book-cover-img">
                         <div style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:white; padding:5px; border-radius:50%;">
                             <i class="fas fa-lock" style="font-size:12px;"></i>
                         </div>
